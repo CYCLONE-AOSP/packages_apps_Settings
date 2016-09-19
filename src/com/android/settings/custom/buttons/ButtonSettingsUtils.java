@@ -16,23 +16,17 @@
 package com.android.settings.custom.buttons;
 
 import android.content.Context;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-import com.android.internal.util.custom.NavbarUtils;
 
 import com.android.settings.Utils;
 
 import static com.android.internal.util.custom.hwkeys.DeviceKeysConstants.*;
 
 public class ButtonSettingsUtils {
-    public static boolean isAvailable(Context context) {
-        return NavbarUtils.canDisable(context) || hasCameraKey(context) || additionalSettingsAvailable(context);
-    }
-
-    public static boolean additionalSettingsAvailable(Context context) {
-        return Utils.canResolveIntent(context, "org.lineageos.settings.device.ADDITIONAL_BUTTONS_SETTINGS");
-    }
-
     public static int getDeviceKeys(Context context) {
         return context.getResources().getInteger(
                 com.android.internal.R.integer.config_deviceHardwareKeys);
@@ -78,6 +72,11 @@ public class ButtonSettingsUtils {
         return (getDeviceKeys(context) & KEY_MASK_CAMERA) != 0;
     }
 
+    /* returns whether the device has volume rocker or not. */
+    public static boolean hasVolumeKeys(Context context) {
+        return (getDeviceKeys(context) & KEY_MASK_VOLUME) != 0;
+    }
+
     /* returns whether the device can be waken using the home key or not. */
     public static boolean canWakeUsingHomeKey(Context context) {
         return (getDeviceWakeKeys(context) & KEY_MASK_HOME) != 0;
@@ -108,6 +107,11 @@ public class ButtonSettingsUtils {
         return (getDeviceWakeKeys(context) & KEY_MASK_CAMERA) != 0;
     }
 
+    /* returns whether the device can be waken using the volume rocker or not. */
+    public static boolean canWakeUsingVolumeKeys(Context context) {
+        return (getDeviceWakeKeys(context) & KEY_MASK_VOLUME) != 0;
+    }
+
     /* returns whether the device supports button backlight adjusment or not. */
     public static boolean hasButtonBacklightSupport(Context context) {
         final boolean buttonBrightnessControlSupported = context.getResources().getInteger(
@@ -125,5 +129,28 @@ public class ButtonSettingsUtils {
         return context.getResources().getInteger(com.android.internal.R.integer
                 .config_deviceSupportsKeyboardBrightnessControl) != 0;
     }
+
+    public static boolean deviceSupportsFlashLight(Context context) {
+        CameraManager cameraManager = (CameraManager) context.getSystemService(
+                Context.CAMERA_SERVICE);
+        try {
+            String[] ids = cameraManager.getCameraIdList();
+            for (String id : ids) {
+                CameraCharacteristics c = cameraManager.getCameraCharacteristics(id);
+                Boolean flashAvailable = c.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                Integer lensFacing = c.get(CameraCharacteristics.LENS_FACING);
+                if (flashAvailable != null
+                        && flashAvailable
+                        && lensFacing != null
+                        && lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
+                    return true;
+                }
+            }
+        } catch (CameraAccessException | AssertionError e) {
+            // Ignore
+        }
+        return false;
+    }
+
 
 }
