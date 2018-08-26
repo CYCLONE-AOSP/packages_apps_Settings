@@ -18,4 +18,5 @@
   <!-- Cyclone version -->
     <string name="cyclone_version">Cyclone version</string>
     <string name="cyclone_version_default">Unknown</string>
+    <string name="build_date">Build date</string>
 </resources>
