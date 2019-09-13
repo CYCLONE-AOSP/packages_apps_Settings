@@ -14,4 +14,8 @@
     <string name="selinux_status_disabled">Disabled</string>
     <string name="selinux_status_permissive">Permissive</string>
     <string name="selinux_status_enforcing">Enforcing</string>
+
+  <!-- Cyclone version -->
+    <string name="cyclone_version">Cyclone version</string>
+    <string name="cyclone_version_default">Unknown</string>
 </resources>
