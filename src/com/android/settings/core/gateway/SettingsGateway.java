@@ -181,6 +181,8 @@ import com.android.settings.wifi.tether.WifiTetherSettings;
 
 import com.cyclone.settings.CycloneSettings;
 
+import ink.kscope.settings.wifi.tether.WifiTetherClientManager;
+
 public class SettingsGateway {
 
     /**
@@ -349,7 +351,8 @@ public class SettingsGateway {
             TurnScreenOnSettings.class.getName(),
             TurnScreenOnDetails.class.getName(),
             // Cyclone Additions
-            CycloneSettings.class.getName()
+            CycloneSettings.class.getName(),
+            WifiTetherClientManager.class.getName()
     };
 
     public static final String[] SETTINGS_FOR_RESTRICTED = {
