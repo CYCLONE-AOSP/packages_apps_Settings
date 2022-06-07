@@ -51,4 +51,7 @@
     <string name="thin_label">Thin</string>
     <string name="thick_label">Thick</string>
 
+    <!-- Fullscreen gestures -->
+    <string name="navbar_category">Navigation bar</string>
+
 </resources>
